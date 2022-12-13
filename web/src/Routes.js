@@ -7,12 +7,15 @@
 // 'src/pages/HomePage/HomePage.js'         -> HomePage
 // 'src/pages/Admin/BooksPage/BooksPage.js' -> AdminBooksPage
 
+import { useAuth } from '@redwoodjs/auth'
 import { Router, Route, Set, Private } from '@redwoodjs/router'
 
 import AdminLayout from './layouts/AdminLayout/AdminLayout'
 import UserLayout from './layouts/UserLayout/UserLayout'
 
 const Routes = () => {
+  const { hasRole } = useAuth()
+
   return (
     <Router>
       <Private unauthenticated="login" roles="admin">
@@ -24,6 +27,14 @@ const Routes = () => {
         </Set>
         <Set wrap={AdminLayout} title="Admin">
           <Route path="/admin" page={AdminPage} name="admin" />
+          <Route path="/admin/activate" page={ActivatePage} name="activate" />
+        </Set>
+        <Set wrap={AdminLayout} title="Activities" titleTo="activities">
+          <Route path="/activities" page={ActivityActivitiesPage} name="activities" />
+        </Set>
+        <Set wrap={AdminLayout} title="Settings" titleTo="settings">
+          <Route path="/settings/{id}/edit" page={SettingEditSettingPage} name="editSetting" />
+          <Route path="/settings" page={SettingSettingsPage} name="settings" />
         </Set>
       </Private>
       <Private unauthenticated="login" roles="user">
@@ -32,7 +43,9 @@ const Routes = () => {
         </Set>
       </Private>
       <Private unauthenticated="login">
-        <Route path="/change-password" page={ChangePasswordPage} name="changePassword" />
+        <Set wrap={hasRole('admin') ? AdminLayout : UserLayout}>
+          <Route path="/change-password" page={ChangePasswordPage} name="changePassword" />
+        </Set>
       </Private>
       <Route path="/login" page={LoginPage} name="login" />
       <Route path="/signup" page={SignupPage} name="signup" />

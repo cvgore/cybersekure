@@ -16,6 +16,7 @@ const UPDATE_USER_PASSWORD_MUTATION = gql`
 
 export const ChangePasswordPage = ({ user }) => {
   const { reauthenticate } = useAuth()
+
   const [updateUserPassword, { loading, error }] = useMutation(
     UPDATE_USER_PASSWORD_MUTATION,
     {

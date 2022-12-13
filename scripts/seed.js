@@ -4,13 +4,10 @@ import { hashPassword } from '@redwoodjs/api'
 
 export default async () => {
   try {
-    // If using dbAuth and seeding users, you'll need to add a `hashedPassword`
-    // and associated `salt` to their record. Here's how to create them using
-    // the same algorithm that dbAuth uses internally:
-    //
-    //   import { hashPassword } from '@redwoodjs/api'
-    //
-    const users = [{ username: 'ADMIN', password: 'Admin1' }]
+    const users = [
+      { username: 'SYSTEM', password: '' },
+      { username: 'ADMIN', password: 'Admin1' },
+    ]
 
     for (const user of users) {
       const [hashedPassword, salt] = hashPassword(user.password)
@@ -23,6 +20,20 @@ export default async () => {
         },
       })
     }
+
+    const settings = {
+      saveUserActivites: true,
+      maxFailedLoginAttempts: 5,
+      failedLoginLockoutTime: 5 * 60,
+      sessionTime: 10 * 60,
+      activationKey: null,
+    }
+
+    Object.entries(settings).forEach(async ([key, value]) => {
+      await db.setting.create({
+        data: { key, value: JSON.stringify(value) },
+      })
+    })
   } catch (error) {
     console.warn('Please define your seed data.')
     console.error(error)

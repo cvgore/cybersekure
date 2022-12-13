@@ -22,5 +22,13 @@
   "prisma": {
     "seed": "yarn rw exec seed"
   },
-  "packageManager": "yarn@3.2.3"
+  "packageManager": "yarn@3.2.3",
+  "scripts": {
+    "faktory": "podman run --rm -it -p 127.0.0.1:7419:7419 -p 127.0.0.1:7420:7420 contribsys/faktory:latest"
+  },
+  "dependencies": {
+    "faktory-worker": "^4.5.1",
+    "node-fetch": "2",
+    "react-google-recaptcha": "^2.1.0"
+  }
 }

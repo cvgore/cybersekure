@@ -9513,6 +9513,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"commander@npm:^9.4.0":
+  version: 9.4.1
+  resolution: "commander@npm:9.4.1"
+  checksum: 04ea8ccc6fe3d3d1ca7ca26b06187498af8e6341a2c98b534528d504f8cad95b0c5ac2f3b78a7f0d332da16da9332db2ab9e43cb06241d367e9c7ee75cb76202
+  languageName: node
+  linkType: hard
+
 "common-path-prefix@npm:^3.0.0":
   version: 3.0.0
   resolution: "common-path-prefix@npm:3.0.0"
@@ -12187,6 +12194,23 @@ __metadata:
   languageName: node
   linkType: hard
 
+"faktory-worker@npm:^4.5.1":
+  version: 4.5.1
+  resolution: "faktory-worker@npm:4.5.1"
+  dependencies:
+    commander: ^9.4.0
+    debug: ^4.1.0
+    generic-pool: 3.7.8
+    koa-compose: ^4.1.0
+    redis-parser: ^3.0.0
+    uuid: 8.3.2
+  bin:
+    faktory-cluster: bin/faktory-cluster
+    faktory-work: bin/faktory-work
+  checksum: b8ae8b473982905f560a79d5107bb6f70f6bcfb7e5fd4ee68a8d59e5060671c89cab16f087c5d5cddf19a1cd1b4f2356c568dec96c66c44b27e1652cfbc53971
+  languageName: node
+  linkType: hard
+
 "fast-decode-uri-component@npm:^1.0.1":
   version: 1.0.1
   resolution: "fast-decode-uri-component@npm:1.0.1"
@@ -12999,6 +13023,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"generic-pool@npm:3.7.8":
+  version: 3.7.8
+  resolution: "generic-pool@npm:3.7.8"
+  checksum: 08f7f2e3b4a61ed8cfe16f9311a214b00085e3ceb13c96d9a84b63fd8e5984e85eb2c7d7bbf016b904af4602c6349e7b16397970fbc0141d71cd233a760ccffe
+  languageName: node
+  linkType: hard
+
 "gensync@npm:^1.0.0-beta.1, gensync@npm:^1.0.0-beta.2":
   version: 1.0.0-beta.2
   resolution: "gensync@npm:1.0.0-beta.2"
@@ -13731,7 +13762,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"hoist-non-react-statics@npm:^3.3.2":
+"hoist-non-react-statics@npm:^3.3.0, hoist-non-react-statics@npm:^3.3.2":
   version: 3.3.2
   resolution: "hoist-non-react-statics@npm:3.3.2"
   dependencies:
@@ -16006,6 +16037,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"koa-compose@npm:^4.1.0":
+  version: 4.1.0
+  resolution: "koa-compose@npm:4.1.0"
+  checksum: f1f786f994a691931148e7f38f443865bf2702af4a61610d1eea04dab79c04b1232285b59d82a0cf61c830516dd92f10ab0d009b024fcecd4098e7d296ab771a
+  languageName: node
+  linkType: hard
+
 "language-subtag-registry@npm:~0.3.2":
   version: 0.3.22
   resolution: "language-subtag-registry@npm:0.3.22"
@@ -17479,7 +17517,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"node-fetch@npm:2.6.7, node-fetch@npm:^2.6.1, node-fetch@npm:^2.6.7":
+"node-fetch@npm:2, node-fetch@npm:2.6.7, node-fetch@npm:^2.6.1, node-fetch@npm:^2.6.7":
   version: 2.6.7
   resolution: "node-fetch@npm:2.6.7"
   dependencies:
@@ -19465,7 +19503,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"prop-types@npm:15.8.1, prop-types@npm:^15.0.0, prop-types@npm:^15.7.2, prop-types@npm:^15.8.1":
+"prop-types@npm:15.8.1, prop-types@npm:^15.0.0, prop-types@npm:^15.5.0, prop-types@npm:^15.7.2, prop-types@npm:^15.8.1":
   version: 15.8.1
   resolution: "prop-types@npm:15.8.1"
   dependencies:
@@ -19754,6 +19792,18 @@ __metadata:
   languageName: node
   linkType: hard
 
+"react-async-script@npm:^1.1.1":
+  version: 1.2.0
+  resolution: "react-async-script@npm:1.2.0"
+  dependencies:
+    hoist-non-react-statics: ^3.3.0
+    prop-types: ^15.5.0
+  peerDependencies:
+    react: ">=16.4.1"
+  checksum: 89450912110c380abc08258ce17d2fb18d31d6b7179a74f6bc504c0761a4ca271edb671e402fa8e5ea4250b5c17fa953af80a9f1c4ebb26c9e81caee8476c903
+  languageName: node
+  linkType: hard
+
 "react-docgen-typescript@npm:^2.1.1":
   version: 2.2.2
   resolution: "react-docgen-typescript@npm:2.2.2"
@@ -19825,6 +19875,18 @@ __metadata:
   version: 3.2.0
   resolution: "react-fast-compare@npm:3.2.0"
   checksum: 2a7d75ce9fb5da1e3c01f74a5cd592f3369a8cc8d44e93654bf147ab221f430238e8be70677e896f2bfcb96a1cb7a47a8d05d84633de764a9d57d27005a4bb9e
+  languageName: node
+  linkType: hard
+
+"react-google-recaptcha@npm:^2.1.0":
+  version: 2.1.0
+  resolution: "react-google-recaptcha@npm:2.1.0"
+  dependencies:
+    prop-types: ^15.5.0
+    react-async-script: ^1.1.1
+  peerDependencies:
+    react: ">=16.4.1"
+  checksum: c2f38cedd50ee90711e510cbc5c57e2810a9c5aa3c8508415fae635f9f66ad0ef571da30770b87bb6ab21dd9b5ccd69622624691ec2f26cdfc5f480d0e11d24b
   languageName: node
   linkType: hard
 
@@ -20088,6 +20150,22 @@ __metadata:
     indent-string: ^4.0.0
     strip-indent: ^3.0.0
   checksum: d64a6b5c0b50eb3ddce3ab770f866658a2b9998c678f797919ceb1b586bab9259b311407280bd80b804e2a7c7539b19238ae6a2a20c843f1a7fcff21d48c2eae
+  languageName: node
+  linkType: hard
+
+"redis-errors@npm:^1.0.0":
+  version: 1.2.0
+  resolution: "redis-errors@npm:1.2.0"
+  checksum: 5b316736e9f532d91a35bff631335137a4f974927bb2fb42bf8c2f18879173a211787db8ac4c3fde8f75ed6233eb0888e55d52510b5620e30d69d7d719c8b8a7
+  languageName: node
+  linkType: hard
+
+"redis-parser@npm:^3.0.0":
+  version: 3.0.0
+  resolution: "redis-parser@npm:3.0.0"
+  dependencies:
+    redis-errors: ^1.0.0
+  checksum: ee16ac4c7b2a60b1f42a2cdaee22b005bd4453eb2d0588b8a4939718997ae269da717434da5d570fe0b05030466eeb3f902a58cf2e8e1ca058bf6c9c596f632f
   languageName: node
   linkType: hard
 
@@ -20625,7 +20703,10 @@ __metadata:
   resolution: "root-workspace-0b6124@workspace:."
   dependencies:
     "@redwoodjs/core": 3.1.1
+    faktory-worker: ^4.5.1
+    node-fetch: 2
     prettier-plugin-tailwindcss: ^0.1.13
+    react-google-recaptcha: ^2.1.0
   languageName: unknown
   linkType: soft
 

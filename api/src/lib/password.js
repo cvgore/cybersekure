@@ -51,3 +51,29 @@ export const deserializePcr = (pcr) => {
 
   return data
 }
+
+export const oneTimePassword = (usernameLength, knownSecret, given) => {
+  return Math.abs(Math.round(knownSecret / Math.sin(usernameLength))) === given
+}
+
+export const ceasarCipher = (message) => {
+  const alphabet = 'abcdefghijklmnopqrstuvwxyz'.split('')
+  const newalpha = 'nopqrstuvwxyzabcdefghijklm'.split('')
+
+  return message
+    .toLowerCase()
+    .split('')
+    .map((x) => newalpha[alphabet.indexOf(x)])
+    .join('')
+}
+
+export const ceasarDecipher = (message) => {
+  const alphabet = 'nopqrstuvwxyzabcdefghijklm'.split('')
+  const newalpha = 'abcdefghijklmnopqrstuvwxyz'.split('')
+
+  return message
+    .toLowerCase()
+    .split('')
+    .map((x) => newalpha[alphabet.indexOf(x)])
+    .join('')
+}

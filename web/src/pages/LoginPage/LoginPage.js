@@ -1,5 +1,7 @@
-import { useRef } from 'react'
+import { useRef, useState } from 'react'
 import { useEffect } from 'react'
+
+import ReCAPTCHA from 'react-google-recaptcha'
 
 import { useAuth } from '@redwoodjs/auth'
 import {
@@ -19,6 +21,10 @@ const LoginPage = () => {
 
   useEffect(() => {
     if (isAuthenticated) {
+      if (currentUser.oneTimePasswordEnabled) {
+        return navigate(routes.oneTimePassword())
+      }
+
       if (
         currentUser.forceNewPasswordOnLogin ||
         (currentUser.expirePasswordStartDate &&
@@ -46,9 +52,34 @@ const LoginPage = () => {
     usernameRef.current?.focus()
   }, [])
 
-  const onSubmit = async (data) => {
-    const response = await logIn({ ...data })
+  const captchaRef = useRef(null)
 
+  const [secret, setState] = useState(() =>
+    Math.round(Math.random() * 8999 + 1000)
+  )
+
+  const [generatedOtp, setGeneratedOtp] = useState()
+
+  useEffect(() => {
+    setGeneratedOtp(
+      Math.abs(Math.round(secret / Math.sin(usernameRef.current.value.length)))
+    )
+  }, [secret])
+
+  const onSubmit = async (data) => {
+    const payload = {
+      password: {
+        password: data.password,
+        otpSecret: secret,
+        otp: parseInt(data.otp),
+        recaptchaToken: captchaRef.current.getValue(),
+        customCaptcha: parseInt(data.customCaptcha),
+      },
+      username: data.username,
+    }
+    const response = await logIn(payload)
+    captchaRef.current.reset()
+    setState(Math.round(Math.random() * 8999 + 1000))
     if (response.message) {
       toast(response.message)
     } else if (response.error) {
@@ -113,6 +144,60 @@ const LoginPage = () => {
                         message: 'Password is required',
                       },
                     }}
+                  />
+
+                  <Label
+                    name="otp"
+                    className="rw-label"
+                    errorClassName="rw-label rw-label-error"
+                  >
+                    OTP (optional) | secret:&nbsp;
+                    <code title={`${generatedOtp}`}>{secret}</code>
+                  </Label>
+                  <PasswordField
+                    name="otp"
+                    className="rw-input"
+                    errorClassName="rw-input rw-input-error"
+                  />
+
+                  <ReCAPTCHA
+                    sitekey={'6LcvGhIjAAAAAA2FMrzeIYSuPEC6wdNW_4bz8kgB'}
+                    ref={captchaRef}
+                  />
+
+                  <Label
+                    name="customCaptcha"
+                    className="rw-label"
+                    errorClassName="rw-label rw-label-error"
+                  >
+                    Which image fits in jigsaw? Enter ID
+                    <img src="https://i.imgur.com/6Lwzx8d.png"></img>
+                  </Label>
+                  <Label
+                    name="customCaptcha"
+                    className="rw-label"
+                    errorClassName="rw-label rw-label-error"
+                  >
+                    1<img src="https://i.imgur.com/AGmi41R.png"></img>
+                  </Label>
+                  <Label
+                    name="customCaptcha"
+                    className="rw-label"
+                    errorClassName="rw-label rw-label-error"
+                  >
+                    2<img src="https://i.imgur.com/2hQ2Pji.png"></img>
+                  </Label>
+                  <Label
+                    name="customCaptcha"
+                    className="rw-label"
+                    errorClassName="rw-label rw-label-error"
+                  >
+                    3<img src="https://i.imgur.com/wt7VLF7.png"></img>
+                  </Label>
+                  <TextField
+                    name="customCaptcha"
+                    className="rw-input"
+                    errorClassName="rw-input rw-input-error"
                   />
 
                   <div className="rw-forgot-link">

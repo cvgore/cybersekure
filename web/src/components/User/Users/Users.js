@@ -13,6 +13,24 @@ const DELETE_USER_MUTATION = gql`
   }
 `
 
+const BLOCK_USER_MUTATION = gql`
+  mutation BlockUserMutation($id: Int!) {
+    blockUser(id: $id)
+  }
+`
+
+const ENABLE_OTP_MUTATION = gql`
+  mutation EnableOneTimePasswordRequirementMutation($id: Int!) {
+    enableOneTimePasswordRequirement(id: $id)
+  }
+`
+
+const DISABLE_OTP_MUTATION = gql`
+  mutation DisableOneTimePasswordRequirementMutation($id: Int!) {
+    disableOneTimePasswordRequirement(id: $id)
+  }
+`
+
 const UsersList = ({ users }) => {
   const [deleteUser] = useMutation(DELETE_USER_MUTATION, {
     onCompleted: () => {
@@ -21,9 +39,39 @@ const UsersList = ({ users }) => {
     onError: (error) => {
       toast.error(error.message)
     },
-    // This refetches the query on the list page. Read more about other ways to
-    // update the cache over here:
-    // https://www.apollographql.com/docs/react/data/mutations/#making-all-other-cache-updates
+    refetchQueries: [{ query: QUERY }],
+    awaitRefetchQueries: true,
+  })
+
+  const [blockUser] = useMutation(BLOCK_USER_MUTATION, {
+    onCompleted: () => {
+      toast.success('User blocked')
+    },
+    onError: (error) => {
+      toast.error(error.message)
+    },
+    refetchQueries: [{ query: QUERY }],
+    awaitRefetchQueries: true,
+  })
+
+  const [enableOtp] = useMutation(ENABLE_OTP_MUTATION, {
+    onCompleted: () => {
+      toast.success('User OTP enabled')
+    },
+    onError: (error) => {
+      toast.error(error.message)
+    },
+    refetchQueries: [{ query: QUERY }],
+    awaitRefetchQueries: true,
+  })
+
+  const [disableOtp] = useMutation(DISABLE_OTP_MUTATION, {
+    onCompleted: () => {
+      toast.success('User OTP disabled')
+    },
+    onError: (error) => {
+      toast.error(error.message)
+    },
     refetchQueries: [{ query: QUERY }],
     awaitRefetchQueries: true,
   })
@@ -31,6 +79,24 @@ const UsersList = ({ users }) => {
   const onDeleteClick = (id) => {
     if (confirm('Are you sure you want to delete user ' + id + '?')) {
       deleteUser({ variables: { id } })
+    }
+  }
+
+  const onBlockClick = (id) => {
+    if (confirm('Are you sure you want to block user ' + id + '?')) {
+      blockUser({ variables: { id } })
+    }
+  }
+
+  const onEnableOtpClick = (id) => {
+    if (confirm('Are you sure you want to enable OTP for user ' + id + '?')) {
+      enableOtp({ variables: { id } })
+    }
+  }
+
+  const onDisableOtpClick = (id) => {
+    if (confirm('Are you sure you want to disable OTP for user ' + id + '?')) {
+      disableOtp({ variables: { id } })
     }
   }
 
@@ -81,6 +147,43 @@ const UsersList = ({ users }) => {
                   >
                     Edit
                   </Link>
+                  {user.oneTimePasswordEnabled ? (
+                    <>
+                      <button
+                        type="button"
+                        title={
+                          'Disable one time password requirement for user ' +
+                          user.id
+                        }
+                        className="rw-button rw-button-small"
+                        onClick={() => onDisableOtpClick(user.id)}
+                      >
+                        OTP Disable
+                      </button>
+                    </>
+                  ) : (
+                    <>
+                      <button
+                        type="button"
+                        title={
+                          'Enable one time password requirement for user ' +
+                          user.id
+                        }
+                        className="rw-button rw-button-small"
+                        onClick={() => onEnableOtpClick(user.id)}
+                      >
+                        OTP Enable
+                      </button>
+                    </>
+                  )}
+                  <button
+                    type="button"
+                    title={'Block user ' + user.id}
+                    className="rw-button rw-button-small rw-button-red"
+                    onClick={() => onBlockClick(user.id)}
+                  >
+                    Block
+                  </button>
                   <button
                     type="button"
                     title={'Delete user ' + user.id}

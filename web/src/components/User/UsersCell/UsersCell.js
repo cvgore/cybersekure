@@ -13,6 +13,7 @@ export const QUERY = gql`
       expirePasswordStartDate
       forceNewPasswordOnLogin
       passwordComplexityRules
+      oneTimePasswordEnabled
       expiresAt
       deletedAt
     }

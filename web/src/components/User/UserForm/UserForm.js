@@ -100,6 +100,9 @@ const UserForm = (props) => {
           validation={{ required: true }}
         >
           <option value="admin">admin</option>
+          <option value="role1">role1</option>
+          <option value="role2">role2</option>
+          <option value="role3">role3</option>
           <option value="user">user</option>
         </SelectField>
 

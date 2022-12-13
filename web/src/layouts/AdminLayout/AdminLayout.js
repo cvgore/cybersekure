@@ -1,9 +1,13 @@
 import { useAuth } from '@redwoodjs/auth'
-import { Link, navigate, routes } from '@redwoodjs/router'
+import { Link, navigate, routes, back } from '@redwoodjs/router'
 import { Toaster } from '@redwoodjs/web/toast'
 
 const AdminLayout = ({ title, titleTo, buttonLabel, buttonTo, children }) => {
-  const { logOut } = useAuth()
+  const { logOut, hasRole } = useAuth()
+
+  if (!hasRole('admin')) {
+    return back()
+  }
 
   const logout = async () => {
     if (confirm('You are about to logout. Are you sure?')) {
@@ -14,7 +18,7 @@ const AdminLayout = ({ title, titleTo, buttonLabel, buttonTo, children }) => {
 
   return (
     <div className="rw-scaffold">
-      <nav className="p-4 flex justify-between">
+      <nav className="flex justify-between p-4">
         <div className="self-start">cybersekure</div>
         <div className="self-end">
           <div className="flex gap-x-2">
@@ -23,6 +27,12 @@ const AdminLayout = ({ title, titleTo, buttonLabel, buttonTo, children }) => {
             </Link>
             <Link to={routes.users()} className="rw-button">
               Users
+            </Link>
+            <Link to={routes.settings()} className="rw-button">
+              Settings
+            </Link>
+            <Link to={routes.activities()} className="rw-button">
+              Activity log
             </Link>
             <button href="#" className="rw-button" onClick={logout}>
               Logout

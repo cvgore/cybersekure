@@ -23,6 +23,8 @@ model User {
   expiresAt               DateTime?
   deletedAt               DateTime?
   UserPreviousPasswords   UserPreviousPassword[]
+  Activity                Activity[]
+  oneTimePasswordEnabled  Boolean                @default(false)
 }
 
 model UserPreviousPassword {
@@ -33,4 +35,18 @@ model UserPreviousPassword {
   salt           String
 
   @@unique([userId, hashedPassword, salt])
+}
+
+model Activity {
+  id        Int      @id @default(autoincrement())
+  userId    Int
+  User      User     @relation(fields: [userId], references: [id])
+  type      String
+  payload   String?
+  createdAt DateTime
+}
+
+model Setting {
+  key   String  @id
+  value String?
 }

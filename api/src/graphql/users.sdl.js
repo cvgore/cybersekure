@@ -13,6 +13,7 @@ export const schema = gql`
     passwordComplexityRules: String
     expiresAt: DateTime
     deletedAt: DateTime
+    oneTimePasswordEnabled: Boolean!
     UserPreviousPasswords: [UserPreviousPassword]!
   }
 
@@ -55,5 +56,8 @@ export const schema = gql`
     deleteUser(id: Int!): User! @requireAuth
     updateUserPassword(id: Int!, input: UpdateUserPasswordInput!): Boolean!
       @requireAuth
+    blockUser(id: Int!): Boolean! @requireAuth
+    enableOneTimePasswordRequirement(id: Int!): Boolean! @requireAuth
+    disableOneTimePasswordRequirement(id: Int!): Boolean! @requireAuth
   }
 `

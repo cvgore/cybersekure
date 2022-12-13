@@ -1,6 +1,4 @@
-import { DbAuthHandler } from '@redwoodjs/api'
-
-import { ResetPasswordForcedError } from 'src/lib/auth'
+import DbAuthHandlerCustom from 'src/lib/authwrapper'
 import { db } from 'src/lib/db'
 
 export const handler = async (event, context) => {
@@ -48,7 +46,7 @@ export const handler = async (event, context) => {
     // didn't validate their email yet), throw an error and it will be returned
     // by the `logIn()` function from `useAuth()` in the form of:
     // `{ message: 'Error message' }`
-    handler: (user) => {
+    handler: async (user) => {
       if (user.expiresAt && new Date(user.expiresAt) <= new Date()) {
         throw 'Your account is locked / expired'
       }
@@ -137,7 +135,7 @@ export const handler = async (event, context) => {
     enabled: false,
   }
 
-  const authHandler = new DbAuthHandler(event, context, {
+  const authHandler = new DbAuthHandlerCustom(event, context, {
     // Provide prisma db client
     db: db,
 

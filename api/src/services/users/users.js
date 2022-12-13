@@ -5,6 +5,7 @@ import { validateWith } from '@redwoodjs/api'
 
 import { generatePassword } from 'src/lib/auth'
 import { db } from 'src/lib/db'
+import { recordActivity } from 'src/lib/faktory'
 import { deserializePcr } from 'src/lib/password'
 
 export const users = () => {
@@ -22,21 +23,37 @@ export const createUser = async ({ input }) => {
   const [hashedPassword, salt] = hashPassword(password)
   const { password: _, ...filteredInput } = { ...input, hashedPassword, salt }
 
-  await db.user.create({
+  const user = await db.user.create({
     data: filteredInput,
+  })
+
+  await recordActivity('createUser', {
+    username: input.username,
+    userId: user.id,
   })
 
   return password
 }
 
-export const updateUser = ({ id, input }) => {
-  return db.user.update({
+export const updateUser = async ({ id, input }) => {
+  assertNotSystemUser()
+
+  const user = await db.user.update({
     data: input,
     where: { id },
   })
+
+  await recordActivity('updateUser', {
+    username: input.username,
+    userId: user.id,
+  })
+
+  return user
 }
 
 export const updateUserPassword = async ({ id, input }) => {
+  assertNotSystemUser()
+
   const user = await db.user.findUnique({ where: { id } })
   const [currentHashedPassword] = hashPassword(input.currentPassword, user.salt)
   const [hashedPassword, salt] = hashPassword(input.password, user.salt)
@@ -139,13 +156,80 @@ export const updateUserPassword = async ({ id, input }) => {
     },
   })
 
+  await recordActivity('updateUserPassword', {
+    username: input.username,
+    userId: user.id,
+  })
+
   return true
 }
 
-export const deleteUser = ({ id }) => {
-  return db.user.delete({
+export const blockUser = async ({ id }) => {
+  assertNotSystemUser()
+  assertAdmin('block')
+
+  await db.user.update({
+    where: { id },
+    data: {
+      expiresAt: new Date(0),
+    },
+  })
+
+  await recordActivity('blockUser', {
+    userId: id,
+  })
+
+  return true
+}
+
+export const enableOneTimePasswordRequirement = async ({ id }) => {
+  assertNotSystemUser()
+  assertAdmin('enableOneTimePasswordRequirement')
+
+  await db.user.update({
+    where: { id },
+    data: {
+      oneTimePasswordEnabled: true,
+    },
+  })
+
+  await recordActivity('enableOneTimePasswordRequirement', {
+    userId: id,
+  })
+
+  return true
+}
+
+export const disableOneTimePasswordRequirement = async ({ id }) => {
+  assertNotSystemUser()
+  assertAdmin('disableOneTimePasswordRequirement')
+
+  await db.user.update({
+    where: { id },
+    data: {
+      oneTimePasswordEnabled: false,
+    },
+  })
+
+  await recordActivity('disableOneTimePasswordRequirement', {
+    userId: id,
+  })
+
+  return true
+}
+
+export const deleteUser = async ({ id }) => {
+  assertNotSystemUser()
+
+  const user = await db.user.delete({
     where: { id },
   })
+
+  await recordActivity('deleteUser', {
+    userId: user.id,
+  })
+
+  return user
 }
 
 export const User = {
@@ -154,4 +238,20 @@ export const User = {
       .findUnique({ where: { id: root?.id } })
       .UserPreviousPasswords()
   },
+}
+
+const assertNotSystemUser = (id) => {
+  validateWith(() => {
+    if (id === 1) {
+      throw new ServiceValidationError(`"SYSTEM" user is not actionable`)
+    }
+  })
+}
+
+const assertAdmin = (action) => {
+  validateWith(() => {
+    if (context.currentUser.role === 'admin') {
+      throw new ServiceValidationError(`Only admin can ${action} on users`)
+    }
+  })
 }
